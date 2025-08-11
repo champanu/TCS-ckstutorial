@@ -85,4 +85,72 @@
 # echo "COPY FILE TO CONTAINER" > file1.txt
 # docker cp file1.txt <container-id>:/tmp
 # docker exec <container-id> cat /tmp/file1.txt
+
+
+# docker container ls
+# docker attach <container-id> 
+# echo "COPY FILE FROM CONTAINER" > /tmp/file2.txt
+# CTRL+P CTRL+Q (to come out from container)
+# docker cp <container-id>:/tmp/file2.txt /tmp/file2.txt
+# cat /tmp/file2.txt
+```
+
+## EXECUTE COMMAND IN CONTAINER
+```bash 
+# docker exec <container-id> ls
+# docker exec -ti <container-id> ls
+```
+
+## ACCESS CONTAINER LOGS
+```bash
+# docker logs <container-id>
+# docker logs <container-id> --follow (To See continuous logs)
+# docker logs <container-id> -n 5 (last 5 line of log)
+```
+
+## VIER CONTAINER RESOURCES UTILISATION
+```bash
+# docker stats <container-id>
+# docker stats (For all Containers)
+```
+
+## Docker Networking
+```bash
+# docker network ls
+```
+
+```bash
+# docker network create --driver bridge --subnet 192.168.100.0/24 --gateway 192.168.100.1 dev-network
+
+# docker network create --drever bridge --subnet 192.168.200.0/24 --gateway 192.168.200.1 qa-network
+
+```
+### Attach Container name dev-container to dev-network and qa-container to qa-network
+```bash
+# docker container run --network dev-network -d -ti --name dev-container ubuntu
+
+# docker container run --network qa-network -d -ti --name qa-container ubuntu
+
+```
+
+### Inspect the Containers
+```bash
+# docker container inspect <dev-container-id>
+
+# docker container inspect <qa-container-id>
+
+```
+
+### Attach No IP To Container
+```bash 
+# docker container run --network none -d -ti --name none-container ubuntu
+
+# docker container inspect <container-id>
+```
+
+### Attach Host Network to Container
+```
+# docker container run --network host -d -ti --name host-container ubuntu
+
+# docker container inspect < host-cobtainer-id>   
 ```
