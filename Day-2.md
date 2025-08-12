@@ -91,7 +91,8 @@
 
 # docker login myprivaterepo.example.com (Provide username password)
 ```
-### Will create file in home directory od user .docker/config
+
+### Will create file in home directory of user .docker/config.json
 
 ```bash
 # docker pull nginx
