@@ -115,7 +115,7 @@
 # docker logs <container-id> -n 5 (last 5 line of log)
 ```
 
-# VIER CONTAINER RESOURCES UTILISATION
+# VIEW CONTAINER RESOURCES UTILISATION
 ```bash
 # docker stats <container-id>
 # docker stats (For all Containers)
