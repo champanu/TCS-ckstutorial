@@ -1,7 +1,11 @@
 ## See Docker Version
 ```bash 
 # docker version
+
+# docker info 
 ```
+
+# RUN DOCKER COMMANDS 
 
 ## Docker Run Commands
 ```bash
@@ -47,7 +51,7 @@
 # hostname
 ```
 
-## MANAGE CONTAINERS
+# MANAGE CONTAINERS
 
 ```bash
 #docker commit <container-id> newimage:latest (Create Image From Container)
@@ -82,7 +86,7 @@
 # docker rm <container-id> (To remove container from host storage)
 ```  
 
-## COPY TO/FROM CONTAINER
+# COPY TO/FROM CONTAINER
 
 ```bash
 # echo "COPY FILE TO CONTAINER" > file1.txt
@@ -98,26 +102,29 @@
 # cat /tmp/file2.txt
 ```
 
-## EXECUTE COMMAND IN CONTAINER
+# EXECUTE COMMAND IN CONTAINER
 ```bash 
 # docker exec <container-id> ls
 # docker exec -ti <container-id> ls
 ```
 
-## ACCESS CONTAINER LOGS
+# ACCESS CONTAINER LOGS
 ```bash
 # docker logs <container-id>
 # docker logs <container-id> --follow (To See continuous logs)
 # docker logs <container-id> -n 5 (last 5 line of log)
 ```
 
-## VIER CONTAINER RESOURCES UTILISATION
+# VIER CONTAINER RESOURCES UTILISATION
 ```bash
 # docker stats <container-id>
 # docker stats (For all Containers)
 ```
 
-## Docker Networking
+# Docker Networking
+
+### TYPES: Bridge(Default), None, Host
+
 ```bash
 # docker network ls
 ```
@@ -130,10 +137,11 @@
 ```
 ### Attach Container name dev-container to dev-network and qa-container to qa-network
 ```bash
-# docker container run --network dev-network -d -ti --name dev-container ubuntu
+# docker container run --network dev-network -d -ti --name dev-container1 ubuntu
+# docker container run --network dev-network -d -ti --name dev-container2 ubuntu
 
-# docker container run --network qa-network -d -ti --name qa-container ubuntu
-
+# docker container run --network qa-network -d -ti --name qa-container1 ubuntu
+# docker container run --network dev-network -d -ti --name qa-container2 ubuntu
 ```
 
 ### Inspect the Containers
@@ -141,7 +149,20 @@
 # docker container inspect <dev-container-id>
 
 # docker container inspect <qa-container-id>
+```
 
+### Connetion Test within Bridge network 
+```bash
+# docker attach <dev-container1>
+# apt install iputils-ping
+# ping <ip-address of dev-container2> (it should ping)
+# ping <ip-address of qa-container1> (will not ping as in different network)
+```
+```bash
+# docker attach <qa-container1>
+# apt install iputils-ping
+# ping <ip-address of qa-container2> (it should ping)
+# ping <ip-address of dev-container1> (will not ping as in different network)
 ```
 
 ### Attach No IP To Container
