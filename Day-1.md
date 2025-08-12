@@ -18,6 +18,7 @@
 # docker container ls 
 ```
 
+
 ```bash
 # docker container run -d nginx ( -d to run container in detached mode)
 
@@ -56,6 +57,8 @@
 #docker container inspect <container-id>
 
 #docker nework inspect <network-name>
+
+#docker volume inspect <volume-name>
 ```
 
 ```bash
