@@ -228,3 +228,19 @@ EOF
 # docker run -ti -d ubuntu
 # ls -l
 ```
+
+## Deploy image in Airgapped Machine
+
+#### First Login to Machiine you have Internet and pull the image and save it as tar
+```bash
+# docker pull nginx:1.25
+# docker save nginx:1.25 -o nginx.tar
+```
+#### Copy the tar file to Airgapped Machine and load the image
+```bash
+# docker load -i nginx.tar
+# docker images
+# docker run -ti -d nginx(pull it from local)
+```
+
+
