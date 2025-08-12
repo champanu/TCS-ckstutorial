@@ -211,3 +211,18 @@ EOF
 # docker version
 # docker run -d -ti nginx
 ```
+
+## Migration Docker volume from /var/lib/docker to /data/docker
+
+```bash 
+# mkdir -p /data/docker
+# rsync -aP /var/lib/docker/ /data/docker/ (If previously path was /var/lib/docker
+# mkdir -p /etc/docker
+# vim /etc/docker/daemon.json
+{
+  "data-root": "/data/docker"
+}
+# systemctl daemon-reload
+# systemctl restart docker
+# docker info | grep "Docker Root Dir"
+```
