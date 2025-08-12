@@ -164,3 +164,49 @@ EXPOSE 80
 # docker image
 ```
 
+
+## Install Docker in Airgapped Environmant
+
+#### Download Latest Binary
+```bash
+# curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-28.3.3.tgz -o docker.tgz
+# tar -xvzf docker.tgz
+# mv docker/* /usr/local/bin/
+```
+
+#### Start Docker Daemon manually
+```bash 
+# dockerd --host=unix:///var/run/docker.sock
+```
+
+#### Create a service file
+```bash
+sudo tee /etc/systemd/system/docker.service <<'EOF'
+[Unit]
+Description=Docker Daemon
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/dockerd
+Restart=always
+ExecReload=/bin/kill -s HUP $MAINPID
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+TasksMax=infinity
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# systemctl daemon-reload
+# systemctl enable docker
+# systemctl start docker
+```
+
+#### Deploy A container and Check
+```bash
+
+# docker version
+# docker run -d -ti nginx
+```
