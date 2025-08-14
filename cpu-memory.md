@@ -144,18 +144,3 @@ docker run -d --memory="256m" --memory-swap="256m" busybox sh -c "tail -f /dev/n
 * Always test workloads with `docker stats` to verify settings.
 * Avoid setting limits **too tight** — may cause instability.
 * Combine CPU/memory limits with capability dropping for full resource & privilege control.
-
----
-
-## 6. References
-
-* [Docker CPU Options](https://docs.docker.com/config/containers/resource_constraints/#cpu)
-* [Docker Memory Options](https://docs.docker.com/config/containers/resource_constraints/#memory)
-
-```
-
----
-
-If you want, I can **merge this with the capabilities `.md`** we made earlier so you get **one complete “Docker Security & Resource Control” handbook**. That would make it a single go-to file for labs and demos.
-```
-
