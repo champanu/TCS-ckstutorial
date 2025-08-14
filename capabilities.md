@@ -1,9 +1,4 @@
-Got it — I’ll make you a **detailed `.md` file** explaining Docker Linux capabilities, with **examples, scenarios, and security notes**.
-I’ll structure it like a mini-guide so you can use it for both learning and hands-on labs.
-
 ---
-
-````markdown
 # Docker Capabilities – Guide with Scenarios
 
 ## 1. Introduction
