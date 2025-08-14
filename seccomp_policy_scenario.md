@@ -48,7 +48,7 @@ docker run --rm -it --security-opt seccomp=seccomp-restrict.json alpine sh
 mount | grep /tmp
 ```
 
-- Output: `operation not permitted` ✅
+- Output: `operation not permitted` 
 
 2. Try `chmod`:
 
@@ -56,7 +56,7 @@ mount | grep /tmp
 chmod 777 testfile
 ```
 
-- Output: `Operation not permitted` ✅
+- Output: `Operation not permitted` 
 
 3. Try `unlink`:
 
@@ -64,7 +64,7 @@ chmod 777 testfile
 rm testfile
 ```
 
-- Output: `Operation not permitted` ✅
+- Output: `Operation not permitted` 
 
 4. Try `link`:
 
@@ -72,7 +72,7 @@ rm testfile
 ln testfile testlink
 ```
 
-- Output: `Operation not permitted` ✅
+- Output: `Operation not permitted` 
 
 5. Try `df -h`:
 
@@ -80,7 +80,7 @@ ln testfile testlink
 df -h
 ```
 
-- Output: Error or limited info, blocked by `statfs` ✅
+- Output: Error or limited info, blocked by `statfs` 
 
 ---
 
