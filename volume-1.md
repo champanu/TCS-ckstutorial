@@ -17,7 +17,7 @@ CTRL+P CTRL+Q
 # Back on host – verify
 ls /data1
 ```
-📌 **Outcome:** Files created in container are visible on host.
+**Outcome:** Files created in container are visible on host.
 
 ---
 
@@ -36,7 +36,7 @@ CTRL+P CTRL+Q
 # On host
 ls /var/lib/docker/volumes/my-volume/_data/
 ```
-📌 **Outcome:** Volume data stays even after container removal.
+**Outcome:** Volume data stays even after container removal.
 
 ---
 
@@ -57,7 +57,7 @@ docker attach nfs-container
 cd /data
 touch file3.txt
 ```
-📌 **Outcome:** File is visible in the remote NFS share.
+**Outcome:** File is visible in the remote NFS share.
 
 ---
 
@@ -75,7 +75,7 @@ docker attach <container-id>
 cd /tmp
 touch file4.txt
 ```
-📌 **Outcome:** File shows up in your S3 bucket.
+**Outcome:** File shows up in your S3 bucket.
 
 ---
 
@@ -98,7 +98,7 @@ docker run -it --rm -v /mnt/mydata:/data ubuntu bash
 cd /data
 dd if=/dev/zero of=file600MB bs=1M count=600
 ```
-📌 **Outcome:** File creation fails when exceeding quota.
+**Outcome:** File creation fails when exceeding quota.
 
 ---
 
@@ -119,5 +119,5 @@ systemctl daemon-reload
 systemctl restart docker
 docker info | grep "Docker Root Dir"
 ```
-📌 **Outcome:** Docker now uses new storage location.
+**Outcome:** Docker now uses new storage location.
 
