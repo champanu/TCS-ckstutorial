@@ -25,7 +25,7 @@ ls /root
 ```
 ls: cannot open directory '/root': Permission denied
 ```
-- Result: Normal user cannot access root files ✅
+- Result: Normal user cannot access root files 
 
 ---
 
@@ -63,7 +63,7 @@ prctl --no-new-privs
 ```bash
 /tmp/bash-root -c "whoami"
 ```
-- Output: `testuser` → cannot become root ✅
+- Output: `testuser` → cannot become root 
 
 ---
 

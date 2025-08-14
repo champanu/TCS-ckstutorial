@@ -61,6 +61,6 @@ PING container2 (172.18.0.3): 56 data bytes
 ## Summary Table
 | Container    | Network       | Can Ping             |
 |--------------|---------------|--------------------|
-| container1   | test-net      | container2 ✅       |
-| container2   | test-net      | container1 ✅       |
+| container1   | test-net      | container2         |
+| container2   | test-net      | container1         |
 | Host         | Not connected | Cannot ping by default |
