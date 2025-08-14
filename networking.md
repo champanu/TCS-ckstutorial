@@ -55,7 +55,7 @@ apk add --no-cache iputils
 ping -c 3 qa2
 ```
 
-✅ **Result:** Containers in the same custom bridge network can communicate by name.
+**Result:** Containers in the same custom bridge network can communicate by name.
 
 ---
 
@@ -66,7 +66,7 @@ ping -c 3 qa2
 ping -c 3 qa1
 ```
 
-❌ **Result:** Ping fails because networks are isolated by default.
+**Result:** Ping fails because networks are isolated by default.
 
 ---
 
