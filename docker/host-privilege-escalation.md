@@ -3,6 +3,7 @@
 
 
 ## Unsave Container Mounting docker.sock in container  
+```bash
 docker run -it --rm --privileged -v /:/mnt ubuntu:24.04 bash
 ls /mnt
 cat /mnt/etc/passwd
@@ -14,7 +15,7 @@ Docker socket escape
 docker run -it -v /var/run/docker.sock:/var/run/docker.sock docker:24.0.5 sh
 docker ps (inside container we can run)
 docker run -it --rm --privileged ubuntu:24.04 bash (Launh Container)
-
+```
 
 ## Goal
 Demonstrate how a normal user could try to gain root access on a Linux host, and how `no-new-privileges` can prevent it.
