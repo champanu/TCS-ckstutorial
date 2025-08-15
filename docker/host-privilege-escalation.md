@@ -1,4 +1,5 @@
-<img width="2542" height="1138" alt="image" src="https://github.com/user-attachments/assets/2fb5d91d-7867-41fb-846a-06f736e6b897" />
+<img width="2518" height="1320" alt="image" src="https://github.com/user-attachments/assets/9987db74-add8-443f-b29e-eaad1d8285b2" />
+
 
 
 # Host Machine Privilege Escalation Attempt
