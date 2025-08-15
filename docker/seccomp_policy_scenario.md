@@ -1,3 +1,6 @@
+
+<img width="2542" height="1000" alt="image" src="https://github.com/user-attachments/assets/2661b264-6e82-4667-9a28-f91857bd9d1f" />
+
 # Scenario: Seccomp Policy to Restrict Dangerous Syscalls
 
 ## Goal
