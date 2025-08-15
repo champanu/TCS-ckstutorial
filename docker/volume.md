@@ -1,3 +1,7 @@
+<img width="2906" height="1364" alt="image" src="https://github.com/user-attachments/assets/8ab17364-b8fd-44d0-bfe3-1ea18cce2f01" />
+
+
+
 # Scenario: Docker Volume Usage
 
 ## Goal
