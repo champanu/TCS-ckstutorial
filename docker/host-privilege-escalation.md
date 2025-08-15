@@ -1,3 +1,5 @@
+<img width="2542" height="1138" alt="image" src="https://github.com/user-attachments/assets/2fb5d91d-7867-41fb-846a-06f736e6b897" />
+
 
 # Host Machine Privilege Escalation Attempt
 
