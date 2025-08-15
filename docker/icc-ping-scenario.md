@@ -1,4 +1,6 @@
 
+<img width="2102" height="1054" alt="image" src="https://github.com/user-attachments/assets/30146b1e-8243-4547-ac7f-5860857e1957" />
+
 # Inter-Container Communication (Ping Test) Scenario
 
 ## Goal
