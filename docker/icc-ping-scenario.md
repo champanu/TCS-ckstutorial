@@ -1,122 +1,143 @@
 
 <img width="2102" height="1054" alt="image" src="https://github.com/user-attachments/assets/30146b1e-8243-4547-ac7f-5860857e1957" />
 
+Here’s your scenario refactored into a clean, consistent `.md` format with fixed typos, correct IP/gateway config, and better structure.
+
+---
+
 # Inter-Container Communication (Ping Test) Scenario
 
 ## Goal
-- Demonstrate two Docker containers communicating with each other using `ping`.  
-- Show that containers can reach each other via a custom network.
-- Enable icc in docker deamon to block inter container communication
----
 
-## Step 1: Create a Docker Network
-```bash
-docker network create dev-network --address 192.168.100.0/24 --gateway 192.168.200.1
-```
-- `dev-network` will allow containers to talk to each other.
+* Demonstrate two Docker containers communicating with each other using `ping`.
+* Show that containers can reach each other via a **custom network**.
+* Demonstrate how enabling Docker’s `icc` (inter-container communication) setting can **block** communication.
 
 ---
 
-## Step 2: Run Container 1
-```bash
-# docker run -dit --name dev-container1 --network dev-network ubuntu
-# docker attach <dev-container1>
-# apt get update
-# apt install iputils-ping
-#CTRL+P CTRL+Q
+## **Step 1: Create a Custom Docker Network**
 
+```bash
+docker network create \
+  --driver bridge \
+  --subnet 192.168.100.0/24 \
+  --gateway 192.168.100.1 \
+  dev-network
 ```
-- `ubuntu` is container image.  
-- `-dit` runs it in detached interactive mode.  
+
+* `--driver bridge` → Default Docker bridge mode.
+* `--subnet` / `--gateway` → Assign custom IP range.
 
 ---
 
-## Step 3: Run Container 2
+## **Step 2: Run Container 1**
+
 ```bash
-# docker run -dit --name dev-container2 --network dev-network ubuntu
-# docker attach <dev-container2>
-# apt get update
-# apt install iputils-ping
-#CTRL+P CTRL+Q
+docker run -dit --name dev-container1 --network dev-network ubuntu
+docker exec -it dev-container1 bash
+apt-get update && apt-get install -y iputils-ping
 ```
+
+* `-dit` → Detached + Interactive + Terminal.
+* Install `iputils-ping` so we can test connectivity.
+
 ---
 
-## Step 4: Test Communication
-1. Enter `dev-container1`:
+## **Step 3: Run Container 2**
+
 ```bash
-# docker exec -it dev-container1 bash
+docker run -dit --name dev-container2 --network dev-network ubuntu
+docker exec -it dev-container2 bash
+apt-get update && apt-get install -y iputils-ping
 ```
 
-2. Ping `dev-container2`:
+---
+
+## **Step 4: Test Communication**
+
+1. From **dev-container1**, ping **dev-container2**:
+
 ```bash
-# ping -c 3 < ip of dev-container2>
+docker exec -it dev-container1 bash
+ping -c 3 <IP-of-dev-container2>
 ```
-- Output:
+
+Example output:
+
 ```
-PING dev-container2 (172.18.0.3): 56 data bytes
-64 bytes from 172.18.0.3: seq=0 ttl=64 time=0.123 ms
+PING dev-container2 (192.168.100.3): 56 data bytes
+64 bytes from 192.168.100.3: seq=0 ttl=64 time=0.123 ms
 ...
 ```
-- Success → containers can communicate via `dev-network`.
+
+Success → Containers on the same network can communicate.
 
 ---
 
-## Step 5: Security Considerations
-- Only containers on the same network can ping each other.  
-- Host network is isolated unless explicitly connected.  
-- Combine with `userns-remap` or `no-new-privileges` for extra safety.
+## **Step 5: Block Communication Using `icc`**
 
----
+By default, `icc` is enabled (`true`), allowing all containers on a bridge network to talk to each other.
 
-## Lets Block Container Communication within the dev-network
+To **block inter-container communication**:
 
-1. Enable `icc true` in daemon.json
+1. Edit `/etc/docker/daemon.json`:
+
 ```bash
-cat /etc/docker/daemon.json
- 
-   {
-     "icc" : true
-   }
+{
+  "icc": false
+}
+```
+
+2. Restart Docker:
+
+```bash
 systemctl daemon-reload
 systemctl restart docker
 ```
 
-2. Start `dev-container1 and dev-container2`
-```bash 
+3. Recreate the network and containers:
+
+```bash
+docker network create \
+  --driver bridge \
+  --subnet 192.168.100.0/24 \
+  --gateway 192.168.100.1 \
+  dev-network
+
 docker run -dit --name dev-container1 --network dev-network ubuntu
 docker run -dit --name dev-container2 --network dev-network ubuntu
 ```
 
-3. Login to `dev-container1`
+4. Install ping in both containers:
+
 ```bash
-# docker exec -ti dev-container1 bash
-# apt get update 
-# apt install iputils-ping
+docker exec -it dev-container1 bash
+apt-get update && apt-get install -y iputils-ping
 ```
 
-4. Test Connection with `dev-container2`
+5. Test connectivity:
+
 ```bash
-# ping -c 3 <ip address of dec-container2>
+ping -c 3 <IP-of-dev-container2>
 ```
 
-- Output:
+Expected output:
+
 ```
-PING dev-container2 (172.18.0.3): 56 data bytes
+PING 192.168.100.3 (192.168.100.3) 56(84) bytes of data.
+--- 192.168.100.3 ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2028ms
+```
 
-...
+Fail → Communication blocked between containers.
 
-
-- Fail → containers can communicate via `dev-network`.
 ---
 
-## Summary Table
-| Container      | Network       | Can Ping             |
-|----------------|---------------|--------------------|
-| dev-container1 | dev-network   | dev-container2     |
-| dev-container2 | dev-network   | dev-container1         |
-| Host           | Not connected | Cannot ping by default |
+## **Summary Table – Before & After `icc=false`**
 
-## Summary Table After `icc` enable
-| Container      | Network       | Will not Ping      |
-|----------------|---------------|--------------------|
-| dev-container1 | dev-network   | dev-container2     |
+| Container      | Network     | Can Ping Other Container | `icc=false` Behavior |
+| -------------- | ----------- | ------------------------ | -------------------- |
+| dev-container1 | dev-network | Yes                    |  No                 |
+| dev-container2 | dev-network | Yes                    |  No                 |
+
+---
