@@ -1,4 +1,4 @@
-## Fluentd Lof Forwarder
+## Fluentd Log Forwarder
 
 <img width="2882" height="1390" alt="image" src="https://github.com/user-attachments/assets/3781acfb-067c-4495-81bd-163608b5aad4" />
 
