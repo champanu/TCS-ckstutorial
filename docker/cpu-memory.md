@@ -1,3 +1,6 @@
+<img width="2102" height="752" alt="image" src="https://github.com/user-attachments/assets/3f3ef4b8-0160-47ed-b179-d2a1cf2364aa" />
+
+
 # Docker CPU & Memory Management – Guide with Scenarios
 
 ## 1. Introduction
