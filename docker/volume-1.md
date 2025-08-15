@@ -1,3 +1,7 @@
+<img width="2906" height="1364" alt="image" src="https://github.com/user-attachments/assets/eeb476d6-c523-4489-980b-ddd8280c9126" />
+
+
+
 # Docker Volume Scenarios
 
 ## Scenario 1 – Host Path Mount
