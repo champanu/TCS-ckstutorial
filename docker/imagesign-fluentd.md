@@ -9,6 +9,16 @@
 <img width="2330" height="1318" alt="image" src="https://github.com/user-attachments/assets/543de4a8-63b1-46bc-bd38-cabb012e7e9c" />
 
 
+## Docker File Linter
+```bash
+# For Linux AMD64
+# wget -O hadolint https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64
+# chmod +x hadolint
+# sudo mv hadolint /usr/local/bin/
+# hadolint --version
+# hadolint Dockerfile
+```
+
 ## Install Cosign
 ```bash
 # COSIGN_VERSION="v2.1.1"
@@ -32,15 +42,23 @@
 # export PATH=$PATH:$HOME/go/bin
 ```
 
-## Docker File Linter
+## Sign image while pushing to `Repository`
 ```bash
-# For Linux AMD64
-# wget -O hadolint https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64
-# chmod +x hadolint
-# sudo mv hadolint /usr/local/bin/
-# hadolint --version
-# hadolint Dockerfile
+# docker login <your artifact>
+# docker build -t <artifact_url>/<your team>/image-name:tag
+# cosign generate-key-pair
+# cosign sign --key cosing.key <artifact_url>/<your team>/image-name:tag
 ```
+
+Expected Output: Your image will be signed and push to artifact
+
+## Validate the image
+```bash
+# cosign verify --key cosign.pub <artifact_url>/<your team>/image-name:tag
+```
+
+Expected Output: Should verify the image
+
 
 ## Install Fluentd
 ```bash
@@ -104,3 +122,5 @@
 
 # docker run --rm busybox sh -c 'while true; do echo "Hello from busybox $(date)"; sleep 2; done'
 ```
+
+Expected Output: Log should be store in `docker s3 bucket` in AWS
