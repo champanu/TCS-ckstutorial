@@ -44,7 +44,7 @@ docker run -it --rm --mount source=mydata,target=/data alpine sh
 cat /data/hello.txt
 ```
 
-✅ **Result:** The file still exists because it is stored in the volume, not in the container's writable layer.
+**Result:** The file still exists because it is stored in the volume, not in the container's writable layer.
 
 ---
 
@@ -64,7 +64,7 @@ echo "From Host" > ~/hostdata/hostfile.txt
 docker exec bind_container cat /app/hostfile.txt
 ```
 
-✅ **Result:** Files are shared between host and container in real-time.
+**Result:** Files are shared between host and container in real-time.
 
 ---
 
