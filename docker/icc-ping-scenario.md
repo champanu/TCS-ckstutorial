@@ -1,7 +1,6 @@
 
 <img width="2102" height="1054" alt="image" src="https://github.com/user-attachments/assets/30146b1e-8243-4547-ac7f-5860857e1957" />
 
-Here’s your scenario refactored into a clean, consistent `.md` format with fixed typos, correct IP/gateway config, and better structure.
 
 ---
 
@@ -135,9 +134,9 @@ Fail → Communication blocked between containers.
 
 ## **Summary Table – Before & After `icc=false`**
 
-| Container      | Network     | Can Ping Other Container | `icc=false` Behavior |
-| -------------- | ----------- | ------------------------ | -------------------- |
-| dev-container1 | dev-network | Yes                    |  No                 |
-| dev-container2 | dev-network | Yes                    |  No                 |
+| Container      | Network     | Container      | Can Ping Other Container | `icc=true` Behavior |
+| -------------- | ----------- | ---------------| ------------------------ | ------------------- |
+| dev-container1 | dev-network | dev-container2 | Yes                      |  No                 |
+| dev-container2 | dev-network | dev-container1 | Yes                      |  No                 |
 
 ---
