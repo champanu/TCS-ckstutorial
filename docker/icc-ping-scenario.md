@@ -29,8 +29,8 @@ To **block inter-container communication**:
 2. Restart Docker:
 
 ```bash
-systemctl daemon-reload
-systemctl restart docker
+# systemctl daemon-reload
+# systemctl restart docker
 ```
 
 3. Create containers in Docker 0:
@@ -45,14 +45,14 @@ systemctl restart docker
 4. Install ping in both containers:
 
 ```bash
-docker exec -it container1 bash
-apt-get update && apt-get install -y iputils-ping
+# docker exec -it container1 bash
+# apt-get update && apt-get install -y iputils-ping
 ```
 
 5. Test connectivity:
 
 ```bash
-ping -c 3 <IP-of-container2>
+# ping -c 3 <IP-of-container2>
 ```
 
 Expected output:
