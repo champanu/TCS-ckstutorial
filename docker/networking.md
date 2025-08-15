@@ -65,7 +65,7 @@ apk add --no-cache iputils
 ping -c 3 <qa2-ip>
 ```
 
-**Result:** Containers in the same custom bridge network can communicate by name.
+**Result:** Containers in the same custom bridge network can communicate by ip.
 
 ---
 
