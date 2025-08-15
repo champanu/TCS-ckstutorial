@@ -107,6 +107,7 @@ PING dev-container2 (172.18.0.3): 56 data bytes
 
 
 - Fail → containers can communicate via `dev-network`.
+---
 
 ## Summary Table
 | Container      | Network       | Can Ping             |
