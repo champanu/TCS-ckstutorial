@@ -4,11 +4,11 @@
 
 ---
 
-# Inter-Container Communication (Ping Test) Scenario
+# Inter-Container Communication (Ping Test) Scenario For Default Bridge
 
 ## Goal
 
-* Demonstrate how enabling Docker’s `icc` (inter-container communication) setting can **block** communication **default-network (docker 0)**
+* Demonstrate how disabeling Docker’s `icc` (inter-container communication) setting can **block** communication in containers running in DOCKER 0 Bridge **default-network (docker 0)**
 
 ---
 
