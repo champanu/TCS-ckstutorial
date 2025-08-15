@@ -8,72 +8,11 @@
 
 ## Goal
 
-* Demonstrate two Docker containers communicating with each other using `ping`.
-* Show that containers can reach each other via a **custom network**.
 * Demonstrate how enabling Docker’s `icc` (inter-container communication) setting can **block** communication **default-network (docker 0)**
 
 ---
 
-## **Step 1: Create a Custom Docker Network**
-
-```bash
-docker network create \
-  --driver bridge \
-  --subnet 192.168.100.0/24 \
-  --gateway 192.168.100.1 \
-  dev-network
-```
-
-* `--driver bridge` → Default Docker bridge mode.
-* `--subnet` / `--gateway` → Assign custom IP range.
-
----
-
-## **Step 2: Run Container 1**
-
-```bash
-docker run -dit --name dev-container1 --network dev-network ubuntu
-docker exec -it dev-container1 bash
-apt-get update && apt-get install -y iputils-ping
-```
-
-* `-dit` → Detached + Interactive + Terminal.
-* Install `iputils-ping` so we can test connectivity.
-
----
-
-## **Step 3: Run Container 2**
-
-```bash
-docker run -dit --name dev-container2 --network dev-network ubuntu
-docker exec -it dev-container2 bash
-apt-get update && apt-get install -y iputils-ping
-```
-
----
-
-## **Step 4: Test Communication**
-
-1. From **dev-container1**, ping **dev-container2**:
-
-```bash
-docker exec -it dev-container1 bash
-ping -c 3 <IP-of-dev-container2>
-```
-
-Example output:
-
-```
-PING dev-container2 (192.168.100.3): 56 data bytes
-64 bytes from 192.168.100.3: seq=0 ttl=64 time=0.123 ms
-...
-```
-
-Success → Containers on the same network can communicate.
-
----
-
-## **Step 5: Block Communication Using `icc` in Default Docker0**
+## **Step 1: Block Communication Using `icc` in Default Docker0**
 
 By default, `icc` is enabled (`true`), allowing all containers on a default bridge network to talk to each other.
 
@@ -94,7 +33,7 @@ systemctl daemon-reload
 systemctl restart docker
 ```
 
-3. Recreate the network and containers:
+3. Create containers in Docker 0:
 
 ```bash
 
@@ -132,8 +71,6 @@ Fail → Communication blocked between containers in default Docker0 Network.
 
 | Container      | Network     | Container      | Can Ping Other Container | `icc=false` Behavior |
 | -------------- | ----------- | ---------------| ------------------------ | ------------------- |
-| dev-container1 | dev-network | dev-container2 | Yes                      |  No effect          |
-| dev-container2 | dev-network | dev-container1 | Yes                      |  No effect          |
 | container1     | docker 0    | container2     | Yes                      |  No                 |
 
 ---
