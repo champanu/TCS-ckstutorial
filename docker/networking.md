@@ -58,11 +58,11 @@ docker run -dit --name qa2 --network qa-network alpine sh
 ```bash
 # Inside dev1
 apk add --no-cache iputils
-ping -c 3 dev2
+ping -c 3 <dev2-ip>
 
 # Inside qa1
 apk add --no-cache iputils
-ping -c 3 qa2
+ping -c 3 <qa2-ip>
 ```
 
 **Result:** Containers in the same custom bridge network can communicate by name.
@@ -73,7 +73,7 @@ ping -c 3 qa2
 
 ```bash
 # Inside dev1
-ping -c 3 qa1
+ping -c 3 <qa1-ip>
 ```
 
 **Result:** Ping fails because networks are isolated by default.
