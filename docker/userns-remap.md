@@ -1,4 +1,6 @@
 
+<img width="2542" height="1000" alt="image" src="https://github.com/user-attachments/assets/10582fe3-789f-4f61-89fd-dd339034fa88" />
+
 # Docker User Namespace Remapping (`userns-remap`) Scenario
 
 ## Goal
