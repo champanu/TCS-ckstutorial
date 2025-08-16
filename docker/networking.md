@@ -29,13 +29,13 @@
 
 ```bash
 # Create dev-network
-docker network create \
+# docker network create \
   --driver bridge \
   --subnet 192.168.100.0/24 \
   dev-network
 
 # Create qa-network
-docker network create \
+# docker network create \
   --driver bridge \
   --subnet 192.168.200.0/24 \
   qa-network
@@ -47,12 +47,12 @@ docker network create \
 
 ```bash
 # Dev containers
-docker run -dit --name dev1 --network dev-network alpine sh
-docker run -dit --name dev2 --network dev-network alpine sh
+# docker run -dit --name dev1 --network dev-network alpine sh
+# docker run -dit --name dev2 --network dev-network alpine sh
 
 # QA containers
-docker run -dit --name qa1 --network qa-network alpine sh
-docker run -dit --name qa2 --network qa-network alpine sh
+# docker run -dit --name qa1 --network qa-network alpine sh
+# docker run -dit --name qa2 --network qa-network alpine sh
 ```
 
 ---
