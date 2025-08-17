@@ -1,8 +1,3 @@
-Perfect — your doc is already solid 👍 I’ll **refactor it for clarity, formatting, and flow** so it looks like a clean step-by-step production-ready guide.
-
-Here’s the improved `.md`:
-
-````markdown
 # Kubernetes Cluster Setup (1 Master + 2 Workers)
 
 This guide provides a **single automation script** to set up a Kubernetes cluster using `kubeadm` on Ubuntu.
