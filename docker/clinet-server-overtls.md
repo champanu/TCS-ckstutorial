@@ -33,19 +33,20 @@ This guide shows how to configure Docker Engine to allow **remote client access 
 
 ### 1. Configure Docker Service
 
-Create a systemd override file:
+Edit `docker.service` file:
 
 ```bash
-sudo mkdir -p /etc/systemd/system/docker.service.d
-sudo nano /etc/systemd/system/docker.service.d/override.conf
 ```
-
+vim /lib/systemd/system/docker.service
 Add:
 
 ```ini
 [Service]
-ExecStart=
-ExecStart=/usr/bin/dockerd -H unix://var/run/docker.sock -H tcp://0.0.0.0:2376
+ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+         |
+         |To
+         |
+ExecStart=/usr/bin/dockerd -H unix://var/run/docker.sock -H tcp://0.0.0.0:2376 -H fd:// --containerd=/run/containerd/containerd.sock
 ```
 
 ### 2. Restart Docker
@@ -101,7 +102,7 @@ Now we fix the above by adding **TLS authentication**.
 Run the certificate creation script:
 
 ```bash
-./createcert.sh
+./generatecert.sh
 ls -l docker-certs/
 ```
 
@@ -120,7 +121,8 @@ You should see:
 Edit override:
 
 ```bash
-sudo nano /etc/systemd/system/docker.service.d/override.conf
+sudo mkdir -p /etc/systemd/system/docker.service.d (if not exist)
+sudo vim /etc/systemd/system/docker.service.d/override.conf
 ```
 
 Add:
@@ -211,7 +213,7 @@ docker info  # succeeds
 
 ---
 
-## 🔎 Summary
+## Summary
 
 * **Part 1 (Non-Secure):** Remote Docker works, but **anyone can connect**.
 * **Part 2 (Secure):** Only clients with valid TLS certs can connect.
