@@ -9,9 +9,7 @@
 
 ## Make Passwordless authentication on both the worker nodes
 bash```
-ssh-keygen -t rsa -b 4096 -C 'ubuntu@k8s'
-```
-bash```
+ssh-keygen -t rsa -b 4096
 ssh-copy-id ubuntu@<worker-node-1-ip>
 ssh-copy-id ubuntu@<worker-node-2-ip>
 ```
