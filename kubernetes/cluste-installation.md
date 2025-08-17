@@ -1,45 +1,92 @@
+Perfect — your doc is already solid 👍 I’ll **refactor it for clarity, formatting, and flow** so it looks like a clean step-by-step production-ready guide.
+
+Here’s the improved `.md`:
+
+````markdown
 # Kubernetes Cluster Setup (1 Master + 2 Workers)
 
-## Prerequisites
-- 3 Ubuntu machines (**1 master, 2 workers**)
-- SSH access from **master → workers** (with passwordless login or SSH keys)
-- All nodes must have **unique hostnames** and be able to reach each other
+This guide provides a **single automation script** to set up a Kubernetes cluster using `kubeadm` on Ubuntu.
 
 ---
 
-## Make Passwordless authentication on both the worker nodes
-bash```
+## Prerequisites
+- 3 Ubuntu 20.04+ machines (**1 master, 2 workers**)
+- SSH access from **master → workers** (with passwordless login)
+- All nodes must have **unique hostnames** and network connectivity
+- The `ubuntu` user should have **passwordless sudo** access
+
+---
+
+## Step 1: Configure Passwordless Authentication
+
+### Generate SSH keypair on **master node**
+```bash
 ssh-keygen -t rsa -b 4096
+````
+
+Press **Enter** for defaults (no passphrase).
+
+### Copy public key to workers
+
+```bash
 ssh-copy-id ubuntu@<worker-node-1-ip>
 ssh-copy-id ubuntu@<worker-node-2-ip>
 ```
-## Verify Login with `ubuntu user`
+
+### Verify login
+
 ```bash
-ssh ubuntu@192.168.1.11 hostname
-ssh ubuntu@192.168.1.12 hostname
+ssh ubuntu@<worker-node-1-ip> hostname
+ssh ubuntu@<worker-node-2-ip> hostname
 ```
 
-## Check if ubuntu is in the sudo group
-On each node (master + workers):
+---
+
+## Step 2: Ensure `ubuntu` User Has Sudo Access
+
+### Check group membership
+
 ```bash
 groups ubuntu
 ```
-Expected Output: `ubuntu : ubuntu adm cdrom sudo dip lxd`
 
-## Allow passwordless sudo
+Expected output:
+
+```
+ubuntu : ubuntu adm cdrom sudo dip lxd
+```
+
+### Allow passwordless sudo
+
+Edit `/etc/sudoers`:
+
 ```bash
-sudo vim /etc/sudoers
+sudo visudo
+```
 
+Add at the end:
+
+```
 ubuntu ALL=(ALL) NOPASSWD:ALL
 ```
 
-## Test 
+### Test
+
 ```bash
 ssh ubuntu@<worker-node-ip> "sudo whoami"
 ```
-Expected Output: `root`
 
-## Create Script `k8s-cluster.sh`
+Expected output:
+
+```
+root
+```
+
+---
+
+## Step 3: Create the Cluster Setup Script
+
+Create a file named **`k8s-cluster.sh`** on the **master node**:
 
 ```bash
 #!/bin/bash
@@ -48,7 +95,7 @@ set -e
 # ========== CONFIG ==========
 MASTER_IP="<master-node-ip>"
 WORKERS=("<worker-node-1-ip>" "<worker-node-2-ip>")
-USER="ubuntu"   # Change this to your SSH username
+USER="ubuntu"   # SSH user with sudo privileges
 POD_CIDR="192.168.0.0/16"
 # =============================
 
@@ -123,11 +170,11 @@ done
 
 echo "[STEP 6] Cluster setup complete. Verify with:"
 echo "ssh $USER@$MASTER_IP kubectl get nodes"
-````
+```
 
 ---
 
-## Usage
+## Step 4: Run the Script
 
 1. Copy the script to your **master node**:
 
@@ -136,7 +183,7 @@ nano k8s-cluster.sh
 chmod +x k8s-cluster.sh
 ```
 
-2. Update the variables inside (**MASTER\_IP, WORKERS, USER**).
+2. Update variables (**MASTER\_IP, WORKERS, USER**) inside the script.
 
 3. Run it:
 
@@ -144,7 +191,7 @@ chmod +x k8s-cluster.sh
 ./k8s-cluster.sh
 ```
 
-4. Verify:
+4. Verify cluster status:
 
 ```bash
 kubectl get nodes
@@ -152,12 +199,12 @@ kubectl get nodes
 
 ---
 
-##Expected Output
+## Expected Output
 
 ```bash
-
 NAME       STATUS   ROLES           AGE   VERSION
 master     Ready    control-plane   2m    v1.31.3
 worker1    Ready    <none>          1m    v1.31.3
 worker2    Ready    <none>          1m    v1.31.3
 ```
+
