@@ -1,4 +1,5 @@
-<img width="1826" height="1006" alt="image" src="https://github.com/user-attachments/assets/57c187e3-84ce-4cbe-bdee-eaddd13eb4e0" />
+<img width="1822" height="1310" alt="image" src="https://github.com/user-attachments/assets/b9db2399-a496-4e4a-b19f-aef83a488da6" />
+
 
 
 # Kubernetes Cluster Setup (1 Master + 2 Workers) — Step‑by‑Step (Ubuntu 20.04+)
