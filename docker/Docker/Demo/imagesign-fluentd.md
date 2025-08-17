@@ -59,6 +59,16 @@ Expected Output: Your image will be signed and push to artifact
 
 Expected Output: Should verify the image
 
+## Script to Do Verification
+1. `push image` with `cosign sign -key` command and verify
+```bash
+imagesignverify.sh <artifact_url>/<your team>/image-name:tag
+```
+
+2. `push image` without sign and verify
+bash```
+imagesignverify.sh <artifact_url>/<your team>/image-name:tag
+```
 
 ## Install Fluentd
 ```bash
