@@ -13,7 +13,6 @@ ssh-keygen -t rsa -b 4096
 ssh-copy-id ubuntu@<worker-node-1-ip>
 ssh-copy-id ubuntu@<worker-node-2-ip>
 ```
-
 ## Verify Login with `ubuntu user`
 ```bash
 ssh ubuntu@192.168.1.11 hostname
