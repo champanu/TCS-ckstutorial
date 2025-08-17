@@ -1,132 +1,143 @@
-# Kubernetes Basics – Pods, Services, Endpoints
+# Kubernetes Hands-on Scenarios – Pods, Services, Endpoints
 
-## 1. Create a Pod
-```bash
-kubectl run nginx-pod --image=nginx --restart=Never
+---
+
+## Scenario 1: Create a Pod
+1. Create a pod running Nginx:
+   ```bash
+   kubectl run nginx-pod --image=nginx --restart=Never
 ````
 
-Verify:
+2. Verify the pod is running:
 
-```bash
-kubectl get pods
-```
-
----
-
-## 2. Dry Run & Generate YAML
-
-Create a Pod YAML without actually deploying:
-
-```bash
-kubectl run nginx-pod --image=nginx --restart=Never --dry-run=client -o yaml > pod.yaml
-```
-
-Apply the YAML:
-
-```bash
-kubectl apply -f pod.yaml
-```
+   ```bash
+   kubectl get pods
+   ```
 
 ---
 
-## 3. Create a ClusterIP Service
+## Scenario 2: Dry Run & Generate Pod YAML
 
-ClusterIP is the default service type (accessible only inside the cluster).
+1. Generate the YAML definition of a pod without creating it:
 
-```bash
-kubectl expose pod nginx-pod --port=80 --target-port=80 --name=nginx-clusterip
-```
+   ```bash
+   kubectl run nginx-pod --image=nginx --restart=Never --dry-run=client -o yaml > pod.yaml
+   ```
+2. Apply the YAML:
 
-Dry run YAML:
+   ```bash
+   kubectl apply -f pod.yaml
+   ```
+3. Verify:
 
-```bash
-kubectl expose pod nginx-pod --port=80 --target-port=80 --name=nginx-clusterip --type=ClusterIP --dry-run=client -o yaml > clusterip.yaml
-```
-
----
-
-## 4. Create a NodePort Service
-
-Exposes the service on each node’s IP at a static port.
-
-```bash
-kubectl expose pod nginx-pod --port=80 --target-port=80 --name=nginx-nodeport --type=NodePort
-```
-
-Dry run YAML:
-
-```bash
-kubectl expose pod nginx-pod --port=80 --target-port=80 --name=nginx-nodeport --type=NodePort --dry-run=client -o yaml > nodeport.yaml
-```
-
-Check NodePort:
-
-```bash
-kubectl get svc nginx-nodeport
-```
+   ```bash
+   kubectl get pods
+   ```
 
 ---
 
-## 5. Create a LoadBalancer Service
+## Scenario 3: Expose Pod using ClusterIP Service
 
-Used in cloud environments (AWS, GCP, Azure).
+1. Expose the pod internally in the cluster:
 
-```bash
-kubectl expose pod nginx-pod --port=80 --target-port=80 --name=nginx-lb --type=LoadBalancer
-```
+   ```bash
+   kubectl expose pod nginx-pod --port=80 --target-port=80 --name=nginx-clusterip
+   ```
+2. Check the service:
 
-Dry run YAML:
+   ```bash
+   kubectl get svc nginx-clusterip
+   ```
+3. Generate YAML (dry-run):
 
-```bash
-kubectl expose pod nginx-pod --port=80 --target-port=80 --name=nginx-lb --type=LoadBalancer --dry-run=client -o yaml > loadbalancer.yaml
-```
-
----
-
-## 6. Create an Endpoint
-
-Manually map an external service into Kubernetes.
-
-**endpoint.yaml**
-
-```yaml
-apiVersion: v1
-kind: Endpoints
-metadata:
-  name: my-service
-subsets:
-  - addresses:
-      - ip: 10.0.0.25
-    ports:
-      - port: 80
-```
-
-**service.yaml**
-
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: my-service
-spec:
-  ports:
-    - port: 80
-```
-
-Apply:
-
-```bash
-kubectl apply -f endpoint.yaml
-kubectl apply -f service.yaml
-```
+   ```bash
+   kubectl expose pod nginx-pod --port=80 --target-port=80 --name=nginx-clusterip --type=ClusterIP --dry-run=client -o yaml > clusterip.yaml
+   ```
 
 ---
 
-With these commands you can:
+## Scenario 4: Expose Pod using NodePort Service
 
-* Deploy Pods
-* Generate YAML manifests
-* Expose services (ClusterIP / NodePort / LoadBalancer)
-* Create custom Endpoints
+1. Expose the pod on a NodePort:
+
+   ```bash
+   kubectl expose pod nginx-pod --port=80 --target-port=80 --name=nginx-nodeport --type=NodePort
+   ```
+2. Verify the NodePort:
+
+   ```bash
+   kubectl get svc nginx-nodeport
+   ```
+3. Access the service using:
+
+   ```bash
+   curl http://<NodeIP>:<NodePort>
+   ```
+
+---
+
+## Scenario 5: Expose Pod using LoadBalancer Service
+
+*(Works on cloud platforms like AWS, GCP, Azure)*
+
+1. Expose the pod with a LoadBalancer:
+
+   ```bash
+   kubectl expose pod nginx-pod --port=80 --target-port=80 --name=nginx-lb --type=LoadBalancer
+   ```
+2. Check for external IP:
+
+   ```bash
+   kubectl get svc nginx-lb
+   ```
+
+---
+
+## Scenario 6: Create Custom Endpoint & Service
+
+1. Create an **endpoint.yaml**:
+
+   ```yaml
+   apiVersion: v1
+   kind: Endpoints
+   metadata:
+     name: my-service
+   subsets:
+     - addresses:
+         - ip: 10.0.0.25
+       ports:
+         - port: 80
+   ```
+2. Create a **service.yaml**:
+
+   ```yaml
+   apiVersion: v1
+   kind: Service
+   metadata:
+     name: my-service
+   spec:
+     ports:
+       - port: 80
+   ```
+3. Apply both:
+
+   ```bash
+   kubectl apply -f endpoint.yaml
+   kubectl apply -f service.yaml
+   ```
+4. Verify:
+
+   ```bash
+   kubectl get endpoints my-service
+   kubectl get svc my-service
+   ```
+
+---
+
+By following these **scenarios step by step**, you’ll understand:
+
+* How to create Pods
+* How to expose them using Services (ClusterIP, NodePort, LoadBalancer)
+* How to manually define Endpoints
 
 ```
