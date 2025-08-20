@@ -141,3 +141,34 @@ By following these **scenarios step by step**, you’ll understand:
 * How to manually define Endpoints
 
 ```
+pod.yml to create pod
+``` bash
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+  labels:
+    app: my-app
+spec:
+  containers:
+  - name: my-container
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+```
+
+Servcie.yml to create servcie
+``bash
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: my-app   # matches the Pod label
+  ports:
+    - protocol: TCP
+      port: 80        # Service port (ClusterIP)
+      targetPort: 80  # Pod container port
+  type: ClusterIP
+```
