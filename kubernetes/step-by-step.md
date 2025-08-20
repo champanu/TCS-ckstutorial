@@ -133,12 +133,17 @@ sudo apt-mark hold kubelet kubeadm kubectl
 ```bash
 # Choose a Pod CIDR compatible with Calico
 POD_CIDR=192.168.0.0/16
+SERVICE_CIDR=10.96.0.0/16
+
 
 # Reset if re-running
 sudo kubeadm reset -f
 
 # Initialize
-sudo kubeadm init --pod-network-cidr=$POD_CIDR
+kubeadm init \
+  --pod-network-cidr=$POD_CIDR \
+  --service-cidr=$SERVICE_CIDR
+
 ```
 
 After `kubeadm init` completes, set up kubectl for the `ubuntu` user on the master:
@@ -161,6 +166,8 @@ kubeadm token create --print-join-command
 
 ```bash
 kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+   or
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/calico.yaml
 ```
 
 (Optional) Watch system pods come up:
