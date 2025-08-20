@@ -172,3 +172,108 @@ spec:
       targetPort: 80  # Pod container port
   type: ClusterIP
 ```
+Deployment Changes
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.25
+          ports:
+            - containerPort: 80
+```
+
+Replicaset Demo
+```bash
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-replicaset
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.25
+          ports:
+            - containerPort: 80
+```
+Replicaset Service
+```bash
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-rs-service
+spec:
+  selector:
+    app: nginx   # must match ReplicaSet pod label
+  ports:
+    - protocol: TCP
+      port: 80        
+      targetPort: 80  
+  type: ClusterIP    
+```
+
+
+Deployment Service Yaml
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.25
+          ports:
+            - containerPort: 80
+```
+Deployment Service
+```bash
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80        
+      targetPort: 80  
+  type: ClusterIP     
+``` 
