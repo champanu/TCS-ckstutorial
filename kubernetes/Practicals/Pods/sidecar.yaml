@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-with-sidecar
+  labels:
+    app: nginx-sidecar
+spec:
+  volumes:
+  - name: shared-logs
+    emptyDir: {}
+  containers:
+  - name: nginx
+    image: nginx:1.25
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: shared-logs
+      mountPath: /var/log/nginx
+  - name: log-watcher
+    image: busybox
+    command: ["sh", "-c", "tail -n+1 -f /var/log/nginx/access.log"]
+    volumeMounts:
+    - name: shared-logs
+      mountPath: /var/log/nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-sidecar-svc
+spec:
+  selector:
+    app: nginx-sidecar
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  type: ClusterIP
