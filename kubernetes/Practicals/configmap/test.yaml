@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  APP-MODE: test
+  LOG_LEVEL: error
+kind: ConfigMap
+metadata:
+  name: myconfig2
+  namespace: default

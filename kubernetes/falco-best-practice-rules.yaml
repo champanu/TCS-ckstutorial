@@ -1,0 +1,27 @@
+- rule: Shell Spawned in Container
+  desc: Detect interactive shell spawned in a container
+  condition: container and (proc.name = bash or proc.name = sh)
+  output: "Shell spawned inside container (user=%user.name command=%proc.cmdline container=%container.id)"
+  priority: warning
+  tags: [container, shell, mitre_execution]
+
+- rule: Read Sensitive File
+  desc: Detect attempts to read sensitive files
+  condition: open_read and (fd.name=/etc/shadow or fd.name=/etc/passwd)
+  output: "Sensitive file read (user=%user.name file=%fd.name command=%proc.cmdline container=%container.id)"
+  priority: critical
+  tags: [filesystem, mitre_credential_access]
+
+- rule: Write to etc Directory
+  desc: Detect file creation or modification under /etc
+  condition: open_write and fd.name startswith /etc
+  output: "File modified under /etc (user=%user.name file=%fd.name command=%proc.cmdline container=%container.id)"
+  priority: critical
+  tags: [filesystem, mitre_persistence]
+
+- rule: Privilege Escalation via setuid
+  desc: Detect use of setuid to change privilege
+  condition: evt.type = setuid
+  output: "Privilege escalation attempt detected (user=%user.name command=%proc.cmdline)"
+  priority: alert
+  tags: [privilege_escalation, mitre_privilege_escalation]

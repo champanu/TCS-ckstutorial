@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ResourceQuota
 metadata:
   name: compute-resources
-  namespace: dev
+  namespace: test1
 spec:
   hard:
     requests.cpu: "1"        # total min requested CPU ≤ 1 core

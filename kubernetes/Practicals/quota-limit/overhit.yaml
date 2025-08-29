@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: resource-demo1
+spec:
+  containers:
+  - name: app
+    image: nginx
+    resources:
+      requests:
+        cpu: "500m"     # 0.25 core requested (minimum guaranteed)
+        memory: "3Gi" # 128 MB requested
+      limits:
+        cpu: "600m"     # max 0.5 core the container can use
+        memory: "4Gi" # max 256 MB RAM

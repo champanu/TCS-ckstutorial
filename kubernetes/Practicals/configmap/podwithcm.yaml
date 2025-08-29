@@ -9,4 +9,4 @@ spec:
     command: ["sh", "-c", "echo $APP_ENV && echo $log_level && sleep 3600"]
     envFrom:
     - configMapRef:
-        name: my-config
+        name: myconfig
