@@ -4,7 +4,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: demo-rbac
+  name: sa-demo
 ```
 
 ---
@@ -16,7 +16,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: pod-reader
-  namespace: demo-rbac
+  namespace: sa-demo
 ```
 
 ---
@@ -29,7 +29,7 @@ This Role lets the SA **list and get pods** only.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  namespace: demo-rbac
+  namespace: sa-demo
   name: pod-reader-role
 rules:
 - apiGroups: [""]
@@ -46,7 +46,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: pod-reader-binding
-  namespace: demo-rbac
+  namespace: sa-demo
 subjects:
 - kind: ServiceAccount
   name: pod-reader
@@ -89,14 +89,14 @@ spec:
 
    ```bash
    curl -sSk -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
-     https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT/api/v1/namespaces/demo-rbac/pods
+     https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT/api/v1/namespaces/sa-demo/pods
    ```
 
 3. Try listing secrets (forbidden):
 
    ```bash
    curl -sSk -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
-     https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT/api/v1/namespaces/demo-rbac/secrets
+     https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT/api/v1/namespaces/sa-demo/secrets
    ```
 
    We should see a **403 Forbidden**, proving RBAC works.
