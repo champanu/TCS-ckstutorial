@@ -1,156 +1,235 @@
-# Cilium Network Policy Demo
+# 
 
-This demo shows how to use **Cilium Network Policies (CNPs)** to control traffic between pods in Kubernetes.
+This demo sets up **3 namespaces** with Cilium Network Policies:
 
----
-
-## Prerequisites
-
-- A Kubernetes cluster (any kind, e.g., kind, k3s, AKS, EKS, GKE)
-- Cilium installed as CNI
-- `kubectl` and `cilium` CLI installed
-
-Install Cilium CLI:
-
-```bash
-curl -L --remote-name-all https://github.com/cilium/cilium-cli/releases/latest/download/cilium-linux-amd64.tar.gz{,.sha256sum}
-sha256sum --check cilium-linux-amd64.tar.gz.sha256sum
-sudo tar xzvfC cilium-linux-amd64.tar.gz /usr/local/bin
-````
-
-Install Cilium in your cluster:
-
-```bash
-cilium install
-cilium status
-```
-
-Optional: Enable Hubble for observability:
-
-```bash
-cilium hubble enable
-cilium hubble port-forward
-```
+* `ns-allow-a` ↔ `ns-allow-b` can communicate **via services**
+* `ns-deny` is **completely isolated**
 
 ---
 
-## Setup Namespace and Pods
-
-```bash
-kubectl create namespace netdemo
-
-kubectl run backend --image=nginx -n netdemo --labels app=backend -- sleep 3600
-kubectl run frontend --image=busybox -n netdemo --labels app=frontend -- sleep 3600
-kubectl run otherpod --image=busybox -n netdemo --labels app=other -- sleep 3600
-```
-
-Check pods:
-
-```bash
-kubectl get pods -n netdemo
-```
-
----
-
-## Test Connectivity (Before NetworkPolicy)
-
-```bash
-kubectl exec -n netdemo frontend -- wget -qO- http://backend
-kubectl exec -n netdemo otherpod -- wget -qO- http://backend
-```
-
-Both pods can access the backend (default allow).
-
----
-
-## reate a Cilium Network Policy (Allow Only Frontend)
+## Create Namespaces
 
 ```yaml
-# cilium-allow-frontend.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ns-allow-a
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ns-allow-b
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ns-deny
+```
+
+---
+
+## Deploy Sample Pods + Services
+
+### `ns-allow-a`
+
+```yaml
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: nginx-a
+  namespace: ns-allow-a
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-a
+  template:
+    metadata:
+      labels:
+        app: nginx-a
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-nginx-a
+  namespace: ns-allow-a
+spec:
+  selector:
+    app: nginx-a
+  ports:
+  - port: 80
+    targetPort: 80
+```
+
+### `ns-allow-b`
+
+```yaml
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: nginx-b
+  namespace: ns-allow-b
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-b
+  template:
+    metadata:
+      labels:
+        app: nginx-b
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-nginx-b
+  namespace: ns-allow-b
+spec:
+  selector:
+    app: nginx-b
+  ports:
+  - port: 80
+    targetPort: 80
+```
+
+### `ns-deny`
+
+```yaml
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: nginx-deny
+  namespace: ns-deny
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-deny
+  template:
+    metadata:
+      labels:
+        app: nginx-deny
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-nginx-deny
+  namespace: ns-deny
+spec:
+  selector:
+    app: nginx-deny
+  ports:
+  - port: 80
+    targetPort: 80
+```
+
+---
+
+## Cilium Network Policies
+
+### Allow `ns-allow-a` → `ns-allow-b`
+
+```yaml
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: allow-frontend
-  namespace: netdemo
+  name: allow-a-to-b-service
+  namespace: ns-allow-a
 spec:
-  endpointSelector:
-    matchLabels:
-      app: backend
+  endpointSelector: {}
   ingress:
   - fromEndpoints:
     - matchLabels:
-        app: frontend
+        io.kubernetes.pod.namespace: ns-allow-b
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        io.kubernetes.pod.namespace: ns-allow-b
     toPorts:
     - ports:
       - port: "80"
         protocol: TCP
 ```
 
-Apply the policy:
-
-```bash
-kubectl apply -f cilium-allow-frontend.yaml
-```
-
----
-
-## Test Connectivity (After CNP)
-
-```bash
-kubectl exec -n netdemo frontend -- wget -qO- http://backend
-# Works
-
-kubectl exec -n netdemo otherpod -- wget -qO- http://backend
-#Fails
-```
-
----
-
-## Optional: L7 HTTP Policy
+### Allow `ns-allow-b` → `ns-allow-a`
 
 ```yaml
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: backend-http-policy
-  namespace: netdemo
+  name: allow-b-to-a-service
+  namespace: ns-allow-b
 spec:
-  endpointSelector:
-    matchLabels:
-      app: backend
+  endpointSelector: {}
   ingress:
   - fromEndpoints:
     - matchLabels:
-        app: frontend
+        io.kubernetes.pod.namespace: ns-allow-a
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        io.kubernetes.pod.namespace: ns-allow-a
     toPorts:
     - ports:
       - port: "80"
         protocol: TCP
-      rules:
-        http:
-        - method: GET
-          path: /allowed
 ```
-Only GET requests to `/allowed` are allowed.
+
+### Deny-all in `ns-deny`
+
+```yaml
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: deny-all
+  namespace: ns-deny
+spec:
+  endpointSelector: {}
+  ingress: []
+  egress: []
+```
 
 ---
 
+## Testing
 
-Check active policies:
+From **`ns-allow-a` → `ns-allow-b`**:
 
 ```bash
-cilium policy get
+kubectl exec -n ns-allow-a deploy/nginx-a -- \
+  curl -s svc-nginx-b.ns-allow-b.svc.cluster.local
 ```
 
----
+Works
 
-## Key Takeaways
+From **`ns-allow-b` → `ns-allow-a`**:
 
-* Cilium uses **eBPF** for fast, identity-based networking.
-* Supports **L3/L4 and L7 policies**.
-* Allows **label-based, cross-namespace, and HTTP-level rules**.
-* Full observability via `cilium monitor` or **Hubble UI**.
-
+```bash
+kubectl exec -n ns-allow-b deploy/nginx-b -- \
+  curl -s svc-nginx-a.ns-allow-a.svc.cluster.local
 ```
+
+Works
+
+From **`ns-deny` → any service**:
+
+```bash
+kubectl exec -n ns-deny deploy/nginx-deny -- \
+  curl -s svc-nginx-a.ns-allow-a.svc.cluster.local
+```
+
+Blocked
 
 ---
