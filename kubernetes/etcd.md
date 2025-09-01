@@ -17,9 +17,34 @@ ETCDCTL_API=3 etcdctl member list \
   --cacert=/etc/kubernetes/pki/etcd/ca.crt \
   --cert=/etc/kubernetes/pki/etcd/server.crt \
   --key=/etc/kubernetes/pki/etcd/server.key
-````
+```
 
 ---
+
+## Read Namespce
+```bash
+ETCDCTL_API=3 etcdctl get /registry/namespaces/ --prefix \
+  --endpoints=https://192.168.0.114:2379 \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+  --cert=/etc/kubernetes/pki/etcd/server.crt \
+  --key=/etc/kubernetes/pki/etcd/server.key
+```
+## Read Pod
+```bash
+ETCDCTL_API=3 etcdctl get /registry/pods/default --prefix   --endpoints=https://192.168.0.114:2379   --cacert=/etc/kubernetes/pki/etcd/ca.crt   --cert=/etc/kubernetes/pki/etcd/server.crt   --key=/etc/kubernetes/pki/etcd/server.key
+```
+## Read Config from kube-config
+```bash
+ETCDCTL_API=3 etcdctl get /registry/configmaps/kube-system --prefix \
+  --endpoints=https://192.168.0.114:2379 \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+  --cert=/etc/kubernetes/pki/etcd/server.crt \
+  --key=/etc/kubernetes/pki/etcd/server.key
+```
+## Get a specific pod manifest in JSON
+```bash
+ETCDCTL_API=3 etcdctl get /registry/pods/default/nginx   -w json   --endpoints=https://192.168.0.114:2379   --cacert=/etc/kubernetes/pki/etcd/ca.crt   --cert=/etc/kubernetes/pki/etcd/server.crt   --key=/etc/kubernetes/pki/etcd/server.key | jq .
+```
 
 ## 2. Backup etcd
 
@@ -27,7 +52,7 @@ Create a snapshot of etcd:
 
 ```bash
 ETCDCTL_API=3 etcdctl snapshot save /tmp/etcd-snapshot.db \
-  --endpoints=https://127.0.0.1:2379 \
+  --endpoints=https://192.168.0.114:2379 \
   --cacert=/etc/kubernetes/pki/etcd/ca.crt \
   --cert=/etc/kubernetes/pki/etcd/server.crt \
   --key=/etc/kubernetes/pki/etcd/server.key
