@@ -1,5 +1,3 @@
----
-
 ## 1. Create a Namespace (optional, for isolation)
 
 ```yaml
