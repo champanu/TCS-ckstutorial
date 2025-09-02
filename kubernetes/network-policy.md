@@ -209,7 +209,7 @@ From **`ns-allow-a` → `ns-allow-b`**:
 
 ```bash
 kubectl exec -n ns-allow-a deploy/nginx-a -- \
-  curl -s svc-nginx-b.ns-allow-b.svc.cluster.local
+  curl -s <cluster_ip>
 ```
 
 Works
@@ -218,7 +218,7 @@ From **`ns-allow-b` → `ns-allow-a`**:
 
 ```bash
 kubectl exec -n ns-allow-b deploy/nginx-b -- \
-  curl -s svc-nginx-a.ns-allow-a.svc.cluster.local
+  curl -s <cluster_ip>
 ```
 
 Works
@@ -227,7 +227,7 @@ From **`ns-deny` → any service**:
 
 ```bash
 kubectl exec -n ns-deny deploy/nginx-deny -- \
-  curl -s svc-nginx-a.ns-allow-a.svc.cluster.local
+  curl -s <cluster_ip>
 ```
 
 Blocked
