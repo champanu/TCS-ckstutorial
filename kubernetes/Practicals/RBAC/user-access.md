@@ -1,8 +1,8 @@
 # Kubernetes RBAC Demo: Two Users, One Namespace
 
 This demo shows how to create **two users**, a **namespace**, and assign different permissions:
-- `user1` → can **create Pods and Services**.
-- `user2` → can **read only**, cannot create resources.
+- `Dan` → can **create Pods and Services**.
+- `Joe` → can **read only**, cannot create resources.
 
 ---
 
@@ -34,7 +34,7 @@ openssl req -new -key Joe.key -out Joe.csr -subj "/CN=Joe/O=demo-group"
 openssl x509 -req -in Dan.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out Dan.crt -days 365
 
 # Joe
-openssl x509 -req -in Joe.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out user2.crt -days 365
+openssl x509 -req -in Joe.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out Joe.crt -days 365
 ```
 
 ---
